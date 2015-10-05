@@ -23,11 +23,14 @@ void Datapath::insertPut(Inoutput* iow) {
 	if (iow->getType() == "input") {
 		inputs.push_back(iow);
 	}
-	else if (iow->getType() == "ouput") {
+	else if (iow->getType() == "output") {
 		outputs.push_back(iow);
 	}
 	else if (iow->getType() == "wire") {
 		wires.push_back(iow);
+	}
+	else if (iow->getType() == "register") {
+		registers.push_back(iow);
 	}
 }
 
@@ -44,7 +47,21 @@ Inoutput* Datapath::getInput(string name) {
 		}
 	}
 
-	cout << "The input " << name << "specified does not matched the inputs declared.\n Program terminated.";
+	for (int i = 0; i < wires.size(); i++) {
+		current = wires.at(i);
+		if (name == current->getName()) {
+			return current;
+		}
+	}
+
+	for (int i = 0; i < registers.size(); i++) {
+		current = registers.at(i);
+		if (name == current->getName()) {
+			return current;
+		}
+	}
+
+	cout << "The input " << name << " specified does not matched the inputs declared.\n Program terminated.";
 	return NULL;
 }
 
@@ -64,7 +81,17 @@ Inoutput* Datapath::getOutputWire(string name) {
 		}
 	}
 
-	cout << "The wire/output " << name << "specified does not matched the inputs declared.\n Program terminated.";
+	for (int i = 0; i < registers.size(); i++) {
+		current = registers.at(i);
+		if (name == current->getName()) {
+			return current;
+		}
+	}
+	cout << "The wire/output " << name << " specified does not matched the inputs declared.\n Program terminated.";
 	return NULL;
 
+}
+
+int Datapath::getCompSize() {
+	return components.size();
 }

@@ -24,7 +24,7 @@ Inoutput::Inoutput() {
 }
 Inoutput::Inoutput(string nameString, string sizeSpecString, string type, int sizeInteger) {
 	this->name = nameString;
-	this->getSizeSpec = sizeSpecString;
+	this->sizeSpec = sizeSpecString;
 	this->size = sizeInteger;
 	this->type = type;
 

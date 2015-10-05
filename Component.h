@@ -29,7 +29,7 @@ private:
 
 public:
 	Component();
-	Component(string atype);
+	Component(string atype, string aname);
 	~Component();
 
 	void setType(string type);

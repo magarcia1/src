@@ -25,9 +25,9 @@ Component::Component() {
 	this->sizeoOutput = 0;
 
 }
-Component::Component(string atype) {
+Component::Component(string atype, string aname) {
 	this->type = atype;
-	this->name = "default";
+	this->name = aname;
 	this->output = NULL;
 	this->sizeoOutput = 0;
 }

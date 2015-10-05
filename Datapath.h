@@ -24,6 +24,7 @@ private:
 	vector<Inoutput*> inputs;
 	vector<Inoutput*> outputs;
 	vector<Inoutput*> wires;
+	vector<Inoutput*> registers;
 	
 	vector<Component*> components;
 
@@ -37,6 +38,7 @@ public:
 	void insertComponent(Component* dpcomp);
 	Inoutput* getInput(string name);
 	Inoutput* getOutputWire(string name);
+	int getCompSize();
 	
 
 };
