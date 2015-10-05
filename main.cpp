@@ -20,14 +20,19 @@ int main(int argc, char *argv[])
 {
 	Datapath DPComponents;
 	//TODO: Check for correct input. DONE !
-	if (argc != 2) {
-		cout << "\nUsage:" << argv[0] << " inputFile inputFile \n";
+	if (argc != 3) {
+		cout << "\nUsage: dpgen netlistFile verilogFile \n";
 		return -1;
 	}
 	//TODO: Create a file
 	if (!ReadfromFile(DPComponents, argv[1])) {
 		cout << "Could not finish reading the file due to the errors listed above." << endl;
 		return -2;
+	}
+
+	if (!WritetoFile(DPComponents, argv[2])) {
+		cout << "Could not finish writing to the file due to the errors listed above." << endl;
+		return -3;
 	}
 
 	return 0;

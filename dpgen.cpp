@@ -53,11 +53,12 @@ bool ReadfromFile(Datapath &DP, char* FileName) {
 			continue;
 		}
 
-		//TODO: Detect Input Output Wire Statements DONE-----------------------------------------------------
+		//TODO: Detect Input Output Wire Register Statements DONE-----------------------------------------------------
 		else if ((words[0] == "input") || (words[0] == "output") || (words[0] == "wire") || (words[0] == "register")) {
 			Inoutput* iow;
+			bool signedNum = true;
 
-			//Set width length
+			//Set width length for signed------------------------
 			if (words[1] == "Int2") {
 				words[1] = "[1:0]";
 				size = 2;
@@ -83,7 +84,38 @@ bool ReadfromFile(Datapath &DP, char* FileName) {
 				size = 64;
 			}
 
-			//while loop to finish reading an indefinite amount of inputs/outputs listed in a lines.
+			//Set width length for unsigned------------------------
+			if (words[1] == "UInt2") {
+				words[1] = "[1:0]";
+				size = 2;
+				signedNum = false;
+			}
+			else if (words[1] == "UInt1") {
+				words[1] = "";
+				size = 1;
+				signedNum = false;
+			}
+			else if (words[1] == "UInt8") {
+				words[1] = "[7:0]";
+				size = 8;
+				signedNum = false;
+			}
+			else if (words[1] == "UInt16") {
+				words[1] = "[15:0]";
+				size = 16;
+				signedNum = false;
+			}
+			else if (words[1] == "UInt32") {
+				words[1] = "[31:0]";
+				size = 32;
+				signedNum = false;
+			}
+			else if (words[1] == "UInt64") {
+				words[1] = "[63:0]";
+				size = 64;
+				signedNum = false;
+			}
+			//while loop to finish reading an definite (16) amount of inputs/outputs listed in a lines.
 			bool stop = false;
 
 			for (int j = 0; !stop && (j <= 17); j++){
@@ -102,6 +134,7 @@ bool ReadfromFile(Datapath &DP, char* FileName) {
 
 					//Create class object and insert to DP*****
 					iow = new Inoutput(words[j], words[1], words[0], size);
+					iow->setSign(signedNum);
 					DP.insertPut(iow);
 				}
 
@@ -136,13 +169,17 @@ bool ReadfromFile(Datapath &DP, char* FileName) {
 				if (a == NULL || b == NULL || c == NULL) { //if the input/outputs/wire not found
 					return false;
 				}
-				else {
-					adder->insertInput(a);
-					adder->insertInput(b);
-					adder->setOutput(c);
-					adder->setSize(c->getSizeInt());
-					DP.insertComponent(adder);
+
+				if (a->getSigned() || b->getSigned() || c ->getSigned()) { //if the input/outputs/wire not found
+					adder->setType("SADD");
 				}
+				
+				adder->insertInput(a);
+				adder->insertInput(b);
+				adder->setOutput(c);
+				adder->setSize(c->getSizeInt());
+				DP.insertComponent(adder);
+				
 			}
 
 			// SUBTRACTER ***********************************************************************
@@ -152,8 +189,8 @@ bool ReadfromFile(Datapath &DP, char* FileName) {
 				Inoutput* b;
 				Inoutput* c;
 				stringstream CName;
-
 				CName << "sub" << nameNumber; //guarantees unique name
+
 
 				sub = new Component("SUB", CName.str());
 
@@ -164,13 +201,16 @@ bool ReadfromFile(Datapath &DP, char* FileName) {
 				if (a == NULL || b == NULL || c == NULL) { //if the input/outputs/wire not found
 					return false;
 				}
-				else {
-					sub->insertInput(a);
-					sub->insertInput(b);
-					sub->setOutput(c);
-					sub->setSize(c->getSizeInt());
-					DP.insertComponent(sub);
+				if (a->getSigned() || b->getSigned() || c->getSigned()) { //if the input/outputs/wire are signed
+					sub->setType("SADD");
 				}
+				
+				sub->insertInput(a);
+				sub->insertInput(b);
+				sub->setOutput(c);
+				sub->setSize(c->getSizeInt());
+				DP.insertComponent(sub);
+				
 
 
 			}
@@ -194,13 +234,16 @@ bool ReadfromFile(Datapath &DP, char* FileName) {
 				if (a == NULL || b == NULL || c == NULL) { //if the input/outputs/wire not found
 					return false;
 				}
-				else {
-					mult->insertInput(a);
-					mult->insertInput(b);
-					mult->setOutput(c);
-					mult->setSize(c->getSizeInt());
-					DP.insertComponent(mult);
+				if (a->getSigned() || b->getSigned() || c->getSigned()) { //if the input/outputs/wire signed
+					mult->setType("SMUL");
 				}
+
+				mult->insertInput(a);
+				mult->insertInput(b);
+				mult->setOutput(c);
+				mult->setSize(c->getSizeInt());
+				DP.insertComponent(mult);
+				
 
 			}
 
@@ -223,13 +266,17 @@ bool ReadfromFile(Datapath &DP, char* FileName) {
 				if (a == NULL || b == NULL || c == NULL) { //if the input/outputs/wire not found
 					return false;
 				}
-				else {
-					comp->insertInput(a);
-					comp->insertInput(b);
-					comp->setOutput(c);
-					comp->setSize(c->getSizeInt());
-					DP.insertComponent(comp);
+			
+				if (a->getSigned() || b->getSigned() || c->getSigned()) { //if the input/outputs/wire signed
+					comp->setType("SCOMP");
 				}
+
+				comp->insertInput(a);
+				comp->insertInput(b);
+				comp->setOutput(c);
+				comp->setSize(c->getSizeInt());
+				DP.insertComponent(comp);
+				
 
 
 			}
@@ -258,14 +305,18 @@ bool ReadfromFile(Datapath &DP, char* FileName) {
 				if (a == NULL || b == NULL || c == NULL || d == NULL) { //if the input/outputs/wire not found
 					return false;
 				}
-				else {
-					mux->insertInput(a);
-					mux->insertInput(b);
-					mux->insertInput(c);
-					mux->setOutput(d);
-					mux->setSize(d->getSizeInt());
-					DP.insertComponent(mux);
+
+				if (a->getSigned() || b->getSigned() || c->getSigned() || d->getSigned()) { //if the input/outputs/wire signed
+					mux->setType("SMUX2X1");
 				}
+
+				mux->insertInput(a);
+				mux->insertInput(b);
+				mux->insertInput(c);
+				mux->setOutput(d);
+				mux->setSize(d->getSizeInt());
+				DP.insertComponent(mux);
+				
 
 
 			}
@@ -288,12 +339,15 @@ bool ReadfromFile(Datapath &DP, char* FileName) {
 				if (a == NULL || b == NULL) { //if the input/outputs/wire not found
 					return false;
 				}
-				else {
-					reg->insertInput(a);
-					reg->setOutput(b);
-					reg->setSize(b->getSizeInt());
-					DP.insertComponent(reg);
+				
+				if (a->getSigned() || b->getSigned()) { //if the input/outputs/wire signed
+					reg->setType("SREG");
 				}
+				reg->insertInput(a);
+				reg->setOutput(b);
+				reg->setSize(b->getSizeInt());
+				DP.insertComponent(reg);
+				
 			}
 
 			// RIGHT SHIFTER *********************************************************************
@@ -318,13 +372,17 @@ bool ReadfromFile(Datapath &DP, char* FileName) {
 				if (a == NULL || b == NULL || c == NULL) { //if the input/outputs/wire not found
 					return false;
 				}
-				else {
-					shr->insertInput(a);
-					shr->insertInput(b);
-					shr->setOutput(c);
-					shr->setSize(c->getSizeInt());
-					DP.insertComponent(shr);
+				
+				if (a->getSigned() || b->getSigned() || c->getSigned()) { //if the input/outputs/wire signed
+					shr->setType("SSHR");
 				}
+
+				shr->insertInput(a);
+				shr->insertInput(b);
+				shr->setOutput(c);
+				shr->setSize(c->getSizeInt());
+				DP.insertComponent(shr);
+				
 
 
 			}
@@ -351,15 +409,15 @@ bool ReadfromFile(Datapath &DP, char* FileName) {
 				if (a == NULL || b == NULL || c == NULL) { //if the input/outputs/wire not found
 					return false;
 				}
-				else {
-					shl->insertInput(a);
-					shl->insertInput(b);
-					shl->setOutput(c);
-					shl->setSize(c->getSizeInt());
-					DP.insertComponent(shl);
+				
+				if (a->getSigned() || b->getSigned() || c->getSigned()) { //if the input/outputs/wire signed
+					shl->setType("SSHL");
 				}
-
-
+				shl->insertInput(a);
+				shl->insertInput(b);
+				shl->setOutput(c);
+				shl->setSize(c->getSizeInt());
+				DP.insertComponent(shl);
 			}
 
 			//ERROR*******************************************************************************
@@ -376,4 +434,19 @@ bool ReadfromFile(Datapath &DP, char* FileName) {
 
 	return true;
 
+}
+
+bool WritetoFile(Datapath &DP, char* FileName) {
+	Component* currComponent;
+
+	ofstream myfile(FileName);
+
+	if (myfile.is_open()) {
+
+
+
+
+	}
+	cout << FileName;
+	return true;
 }

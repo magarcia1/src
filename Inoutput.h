@@ -22,6 +22,7 @@ private:
 	string sizeSpec;
 	string type;
 	int size;
+	bool signedNum;
 	
 
 public:
@@ -29,6 +30,8 @@ public:
 	Inoutput(string nameString,string sizeSpecString, string type, int sizeInteger);
 	~Inoutput();
 
+	void setSign(bool sign);
+	bool getSigned();
 	string getName();
 	string getSizeSpec();
 	int getSizeInt();

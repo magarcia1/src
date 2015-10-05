@@ -27,10 +27,19 @@ Inoutput::Inoutput(string nameString, string sizeSpecString, string type, int si
 	this->sizeSpec = sizeSpecString;
 	this->size = sizeInteger;
 	this->type = type;
+	this->signedNum = true;
 
 }
 Inoutput::~Inoutput() {
 	//done in datapath.h/.c
+}
+
+void Inoutput::setSign(bool sign) {
+	this->signedNum = sign;
+}
+
+bool Inoutput::getSigned() {
+	return this->signedNum;
 }
 
 string Inoutput::getName(){
