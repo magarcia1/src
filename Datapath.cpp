@@ -95,3 +95,18 @@ Inoutput* Datapath::getOutputWire(string name) {
 int Datapath::getCompSize() {
 	return components.size();
 }
+
+int Datapath::getInpSize() {
+	return this->inputs.size();
+}
+int Datapath::getOutSize() {
+	return this->outputs.size();
+}
+int Datapath::getWireSize() {
+	return this->wires.size();
+}
+
+Component* Datapath::getComponent(int i) {
+	return this->components.at(i);
+}
+

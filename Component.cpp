@@ -77,4 +77,12 @@ int Component::getSize() {
 	return this->sizeoOutput;
 
 }
+
+int Component::getInputSize() {
+	return this->inputs.size();
+}
+
+void Component::replaceInput(int i, Inoutput* newPut) {
+	this->inputs.at(i) = newPut;
+}
 //------------------------------------------------------------------------------------------------

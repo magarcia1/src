@@ -43,6 +43,9 @@ public:
 	Inoutput* getInput(int i);
 	Inoutput* getOutput();
 	int getSize();
+	int getInputSize();
+
+	void replaceInput(int i, Inoutput* newPut);
 
 };
 //------------------------------------------------------------------------------------------------

@@ -38,7 +38,13 @@ public:
 	void insertComponent(Component* dpcomp);
 	Inoutput* getInput(string name);
 	Inoutput* getOutputWire(string name);
+	Component* getComponent(int i);
 	int getCompSize();
+	int getInpSize();
+	int getOutSize();
+	int getWireSize();
+	
+	
 	
 
 };

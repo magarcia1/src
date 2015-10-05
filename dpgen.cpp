@@ -169,10 +169,6 @@ bool ReadfromFile(Datapath &DP, char* FileName) {
 				if (a == NULL || b == NULL || c == NULL) { //if the input/outputs/wire not found
 					return false;
 				}
-
-				if (a->getSigned() || b->getSigned() || c ->getSigned()) { //if the input/outputs/wire not found
-					adder->setType("SADD");
-				}
 				
 				adder->insertInput(a);
 				adder->insertInput(b);
@@ -200,9 +196,6 @@ bool ReadfromFile(Datapath &DP, char* FileName) {
 
 				if (a == NULL || b == NULL || c == NULL) { //if the input/outputs/wire not found
 					return false;
-				}
-				if (a->getSigned() || b->getSigned() || c->getSigned()) { //if the input/outputs/wire are signed
-					sub->setType("SADD");
 				}
 				
 				sub->insertInput(a);
@@ -340,9 +333,6 @@ bool ReadfromFile(Datapath &DP, char* FileName) {
 					return false;
 				}
 				
-				if (a->getSigned() || b->getSigned()) { //if the input/outputs/wire signed
-					reg->setType("SREG");
-				}
 				reg->insertInput(a);
 				reg->setOutput(b);
 				reg->setSize(b->getSizeInt());
@@ -436,6 +426,64 @@ bool ReadfromFile(Datapath &DP, char* FileName) {
 
 }
 
+bool AdjustComponents(Datapath &DP) {
+	Inoutput* newPut;
+	Inoutput* a;
+	Inoutput* b;
+	Inoutput* c;
+
+	Component* currComp;
+
+	int outputSize;
+	int inputSize;
+
+	
+
+	for (int i; i < DP.getCompSize(); i++) {
+		currComp = DP.getComponent(i);
+		for (int j; currComp->getInputSize(); j++) {
+			a = currComp->getInput(i);
+			b = currComp->getOutput();
+			inputSize = a->getSizeInt();
+			outputSize = b->getSizeInt();
+			
+			//Check that it is not the select line too.
+			if (inputSize < outputSize && (currComp->getName().back()!='1' && j!=2) ) {
+				if (a->getSigned) {
+					stringstream newName;
+					newName << "{{" << (outputSize - inputSize) << "{a[" << a->getSizeInt - 1 << "]}}"
+						<< ", " << a->getName() << "}";
+
+
+					newPut = new Inoutput(newName.str(), a->getSizeSpec(), a->getType(), a->getSizeInt());
+					currComp->replaceInput(i, newPut);
+				}
+				else {
+					stringstream newName;
+					newName << "{{" << (outputSize - inputSize) << "{0}}" << ", " << a->getName() << "}";
+
+					newPut = new Inoutput(newName.str(), a->getSizeSpec(), a->getType(), a->getSizeInt());
+					currComp->replaceInput(i, newPut);
+				}
+				
+			}
+			else if (inputSize > outputSize && (currComp->getName().back() != '1' && j != 2)) {
+			
+				stringstream newName;
+				newName << "[" << (inputSize - outputSize) << ":0]" << a->getName();
+
+
+				newPut = new Inoutput(newName.str(), a->getSizeSpec(), a->getType(), a->getSizeInt());
+				currComp->replaceInput(i, newPut);
+
+			}
+		}
+	
+	}
+
+	return true;
+}
+
 bool WritetoFile(Datapath &DP, char* FileName) {
 	Component* currComponent;
 
@@ -443,6 +491,13 @@ bool WritetoFile(Datapath &DP, char* FileName) {
 
 	if (myfile.is_open()) {
 
+		/*myfile << "`timescale 1ns / 1ps" << endl << "module circuit(";
+
+		istringstream inputs;
+		istringstream outputs;
+
+
+		for (int i = 0; i < DP.)*/
 
 
 
