@@ -439,19 +439,19 @@ bool AdjustComponents(Datapath &DP) {
 
 	
 
-	for (int i; i < DP.getCompSize(); i++) {
+	for (int i=0; i < DP.getCompSize(); i++) {
 		currComp = DP.getComponent(i);
-		for (int j; currComp->getInputSize(); j++) {
+		for (int j=0; currComp->getInputSize(); j++) {
 			a = currComp->getInput(i);
 			b = currComp->getOutput();
 			inputSize = a->getSizeInt();
 			outputSize = b->getSizeInt();
 			
-			//Check that it is not the select line too.
+			//Check that it is not the select line of the MUX too.
 			if (inputSize < outputSize && (currComp->getName().back()!='1' && j!=2) ) {
-				if (a->getSigned) {
+				if (a->getSigned()) {
 					stringstream newName;
-					newName << "{{" << (outputSize - inputSize) << "{a[" << a->getSizeInt - 1 << "]}}"
+					newName << "{{" << (outputSize - inputSize) << "{a[" << a->getSizeInt() - 1 << "]}}"
 						<< ", " << a->getName() << "}";
 
 
