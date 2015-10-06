@@ -1,7 +1,7 @@
-# Author: Miguel Garcia
-# NetID: magarcia1
-# Date: 20 November 2014
-# Assignment Number: 4
+# Author: Miguel A. Garcia and Rubi Ballesteros
+# NetID: magarcia1 rubib
+# Date: October/05/2015
+# Assignment Number: 2
 
 # CMake will do different stuff if we are on Unix (which means Linux/Unix/Mac OS here)
 if( UNIX )
