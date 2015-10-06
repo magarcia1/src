@@ -21,7 +21,7 @@ bool ReadfromFile(Datapath &DP, char* FileName) {
 	string command;
 	string  lineString;
 	ifstream input;
-
+	int temp = 0;
 	int size; // in bits
 
 	input.open(FileName);
@@ -267,7 +267,15 @@ bool ReadfromFile(Datapath &DP, char* FileName) {
 				comp->insertInput(a);
 				comp->insertInput(b);
 				comp->setOutput(c);
-				comp->setSize(c->getSizeInt());
+
+				if (a->Inoutput::getSizeInt() >= b->Inoutput::getSizeInt() ){ 
+					temp = a->Inoutput::getSizeInt();
+				}
+				else if (a->Inoutput::getSizeInt() < b->Inoutput::getSizeInt() ){ 
+					temp = b->Inoutput::getSizeInt();
+				}
+
+				comp->setSize(temp);
 				DP.insertComponent(comp);
 				
 
@@ -505,3 +513,4 @@ bool WritetoFile(Datapath &DP, char* FileName) {
 	cout << FileName;
 	return true;
 }
+
