@@ -561,65 +561,34 @@ bool WritetoFile(Datapath &DP, char* FileName) {
 		//Print inputs, outputs, and wires*********************************************
 
 		//inputs------
-		int currentsizePrint = 0;
+		int currentsizePrint;
 		int prevsizePrint = DP.getInputat(0)->getSizeInt();
-		int futuresizePrint = 0;;
-		myfile << endl << "\tinput " << DP.getInputat(0)->getSizeSpec() << " ";
-		for (int testSign = 0; testSign < 2; testSign++){
-			for (int i = 0; i < DP.getInpSize(); i++) {
-				if (testSign == DP.getInputat(i)->getSigned()){
-					
-					currentsizePrint = DP.getInputat(i)->getSizeInt();
-					if (currentsizePrint == prevsizePrint) {
-						myfile << DP.getInputat(i)->getName();
+		int futuresizePrint;
 
-						if ((i + 1) < DP.getInpSize()) {
-							futuresizePrint = DP.getInputat(i + 1)->getSizeInt();
-
-							if (futuresizePrint == currentsizePrint) {
-								myfile << ", ";
-							}
-							else {
-								myfile << ";";
-							}
-
-						}
-						else {
-							myfile << ";";
-						}
-
-					}
-					else {
-						myfile << endl << "\tinput " << DP.getInputat(i)->getSizeSpec() << " "
-							<< DP.getInputat(i)->getName();
-
-						if ((i + 1) != DP.getInpSize()) {
-							myfile << ", ";
-						}
-						else {
-							myfile << ";";
-						}
-					}
-					prevsizePrint = currentsizePrint;
-				}
-			}
+		bool currSign;
+		bool futureSign;
+		bool prevSign = DP.getInputat(0)->getSigned();
+		//--check if the first input is signed-------
+		if (DP.getInputat(0)->getSigned() == true) {
+			myfile << endl << "\tinput signed " << DP.getInputat(0)->getSizeSpec() << " ";
 		}
+		else {
+			myfile << endl << "\tinput " << DP.getInputat(0)->getSizeSpec() << " ";
+		}
+		//--------------------------------------------
+		for (int i = 0; i < DP.getInpSize(); i++) {
 
-		//outputs------
-		prevsizePrint = DP.getOutputat(0)->getSizeInt();
-		myfile << endl << "\toutput " << DP.getOutputat(0)->getSizeSpec() << " ";
+			currentsizePrint = DP.getInputat(i)->getSizeInt();
+			currSign = DP.getInputat(i)->getSigned();
 
-		for (int i = 0; i < DP.getOutSize(); i++) {
+			if (currentsizePrint == prevsizePrint && currSign == prevSign) {
+				myfile << DP.getInputat(i)->getName();
 
-			currentsizePrint = DP.getOutputat(i)->getSizeInt();
+				if ((i + 1) < DP.getInpSize()) {
+					futuresizePrint = DP.getInputat(i + 1)->getSizeInt();
+					futureSign = DP.getInputat(i + 1)->getSigned();
 
-			if (currentsizePrint == prevsizePrint) {
-				myfile << DP.getOutputat(i)->getName();
-
-				if ((i + 1) < DP.getOutSize()) {
-					futuresizePrint = DP.getOutputat(i + 1)->getSizeInt();
-
-					if (futuresizePrint == currentsizePrint) {
+					if (futuresizePrint == currentsizePrint && futureSign == currSign) {
 						myfile << ", ";
 					}
 					else {
@@ -627,11 +596,78 @@ bool WritetoFile(Datapath &DP, char* FileName) {
 					}
 
 				}
+				else {
+					myfile << ";";
+				}
 
 			}
 			else {
-				myfile << endl << "\toutput " << DP.getOutputat(i)->getSizeSpec() << " "
-					<< DP.getOutputat(i)->getName();
+				if (currSign == true) {
+					myfile << endl << "\tinput signed" << DP.getInputat(i)->getSizeSpec() << " "
+						<< DP.getInputat(i)->getName();
+				}
+				else {
+					myfile << endl << "\tinput " << DP.getInputat(i)->getSizeSpec() << " "
+						<< DP.getInputat(i)->getName();
+				}
+
+				if ((i + 1) != DP.getInpSize()) {
+					myfile << ", ";
+				}
+				else {
+					myfile << ";";
+				}
+			}
+			prevsizePrint = currentsizePrint;
+			prevSign = currSign;
+		}
+
+
+		//OUTPUTS------
+		prevsizePrint = DP.getOutputat(0)->getSizeInt();
+		prevSign = DP.getInputat(0)->getSigned();
+		//--check if the first input is signed-------
+		if (DP.getOutputat(0)->getSigned() == true) {
+			myfile << endl << "\toutput signed " << DP.getOutputat(0)->getSizeSpec() << " ";
+		}
+		else {
+			myfile << endl << "\toutput " << DP.getOutputat(0)->getSizeSpec() << " ";
+		}
+		//--------------------------------------------
+		for (int i = 0; i < DP.getOutSize(); i++) {
+
+			currentsizePrint = DP.getOutputat(i)->getSizeInt();
+			currSign = DP.getOutputat(i)->getSigned();
+
+			if (currentsizePrint == prevsizePrint && currSign == prevSign) {
+				myfile << DP.getOutputat(i)->getName();
+
+				if ((i + 1) < DP.getOutSize()) {
+					futuresizePrint = DP.getOutputat(i + 1)->getSizeInt();
+					futureSign = DP.getOutputat(i + 1)->getSigned();
+
+					if (futuresizePrint == currentsizePrint && futureSign == currSign) {
+						myfile << ", ";
+					}
+					else {
+						myfile << ";";
+					}
+
+				}
+				else {
+					myfile << ";";
+				}
+
+			}
+			else {
+				if (currSign == true) {
+					myfile << endl << "\toutput signed " << DP.getOutputat(i)->getSizeSpec() << " "
+						<< DP.getOutputat(i)->getName();
+				}
+				else {
+					myfile << endl << "\toutput " << DP.getOutputat(i)->getSizeSpec() << " "
+						<< DP.getOutputat(i)->getName();
+				}
 
 				if ((i + 1) != DP.getOutSize()) {
 					myfile << ", ";
@@ -641,23 +677,33 @@ bool WritetoFile(Datapath &DP, char* FileName) {
 				}
 			}
 			prevsizePrint = currentsizePrint;
+			prevSign = currSign;
 		}
 
 		//wire------
 		prevsizePrint = DP.getWireat(0)->getSizeInt();
-		myfile << endl << "\twire " << DP.getWireat(0)->getSizeSpec() << " ";
-
+		prevSign = DP.getWireat(0)->getSigned();
+		//--check if the first input is signed-------
+		if (DP.getWireat(0)->getSigned() == true) {
+			myfile << endl << "\twire signed " << DP.getWireat(0)->getSizeSpec() << " ";
+		}
+		else {
+			myfile << endl << "\twire " << DP.getWireat(0)->getSizeSpec() << " ";
+		}
+		//--------------------------------------------
 		for (int i = 0; i < DP.getWireSize(); i++) {
 
 			currentsizePrint = DP.getWireat(i)->getSizeInt();
+			currSign = DP.getWireat(i)->getSigned();
 
-			if (currentsizePrint == prevsizePrint) {
+			if (currentsizePrint == prevsizePrint && currSign == prevSign) {
 				myfile << DP.getWireat(i)->getName();
 
 				if ((i + 1) < DP.getWireSize()) {
 					futuresizePrint = DP.getWireat(i + 1)->getSizeInt();
+					futureSign = DP.getWireat(i + 1)->getSigned();
 
-					if (futuresizePrint == currentsizePrint) {
+					if (futuresizePrint == currentsizePrint && futureSign == currSign) {
 						myfile << ", ";
 					}
 					else {
@@ -665,14 +711,20 @@ bool WritetoFile(Datapath &DP, char* FileName) {
 					}
 
 				}
-				else if ((i + 1) == DP.getWireSize()) {
+				else {
 					myfile << ";";
 				}
-			}
 
+			}
 			else {
-				myfile << endl << "\twire " << DP.getWireat(i)->getSizeSpec() << " "
-					<< DP.getWireat(i)->getName();
+				if (currSign == true) {
+					myfile << endl << "\twire signed " << DP.getWireat(i)->getSizeSpec() << " "
+						<< DP.getWireat(i)->getName();
+				}
+				else {
+					myfile << endl << "\twire " << DP.getWireat(i)->getSizeSpec() << " "
+						<< DP.getWireat(i)->getName();
+				}
 
 				if ((i + 1) != DP.getWireSize()) {
 					myfile << ", ";
@@ -682,6 +734,7 @@ bool WritetoFile(Datapath &DP, char* FileName) {
 				}
 			}
 			prevsizePrint = currentsizePrint;
+			prevSign = currSign;
 		}
 
 		myfile << "\n\n";
