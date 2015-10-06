@@ -516,7 +516,7 @@ bool WritetoFile(Datapath &DP, char* FileName) {
 		}
 
 		for (i = 0; i < DP.getCompSize(); i++){
-			cout << DP.getComponent(i)->getType() << " #(" << DP.getComponent(i)->getSize() << ") " << DP.getComponent(i)->getName() << "(";
+			cout << "	" << DP.getComponent(i)->getType() << " #(" << DP.getComponent(i)->getSize() << ") " << DP.getComponent(i)->getName() << "(";
 			for (j = 0; j < DP.getComponent(i)->getInputSize(); j++){
 				cout << DP.getComponent(i)->getInput(j)->getName() << ", ";
 			}
@@ -525,11 +525,9 @@ bool WritetoFile(Datapath &DP, char* FileName) {
 			}
 			cout << "\n";
 		}
-
-
+		cout << "endmodule\n";
 	}
 	myfile.close();
 	cout << FileName;
 	return true;
 }
-
