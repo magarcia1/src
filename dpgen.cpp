@@ -470,10 +470,11 @@ bool AdjustInputs(Datapath &DP) {
 			//Check that it is not a Comparator output is always smaller.
 			if (inputSize < outputSize && (currComp->getName().back()!='1' && j!=2) 
 				&& (currComp->getType()!="COMP" && currComp->getType() != "SCOMP")
-				&& (currComp->getType() != "ADD" && currComp->getType() != "SUB")) {
+				&& (currComp->getType() != "ADD" && currComp->getType() != "SUB")
+				&& (currComp->getType() != "REG" && (j!=0 || j!=1))) {
 				if (a->getSigned()) {
 					stringstream newName;
-					newName << "{{" << (outputSize - inputSize) << "{a[" << a->getSizeInt() - 1 << "]}}"
+					newName << "{{" << (outputSize - inputSize) << "{"<< a->getName() << "[" << a->getSizeInt() - 1 << "]}}"
 						<< ", " << a->getName() << "}";
 
 
