@@ -468,18 +468,40 @@ bool AdjustInputs(Datapath &DP) {
 			
 			//Check that it is not the select line of the MUX too.
 			//Check that it is not a Comparator output is always smaller.
-			if (inputSize < outputSize && (currComp->getName().back()!='1' && j!=2) 
+			if (inputSize < outputSize && (currComp->getType().back()!='1' && j!=2) 
 				&& (currComp->getType()!="COMP" && currComp->getType() != "SCOMP")
 				&& (currComp->getType() != "ADD" && currComp->getType() != "SUB")
-				&& (currComp->getType() != "REG" && (j!=0 || j!=1))) {
+				&& (currComp->getType() != "REG" && (j!=0 || j!=1))
+				&& ((currComp->getType() != "SHL" || currComp->getType() != "SSHL") || j != 1 )
+				&& ((currComp->getType() != "SHR" || currComp->getType() != "SSHR") || j != 1)) {
 				if (a->getSigned()) {
-					stringstream newName;
-					newName << "{{" << (outputSize - inputSize) << "{"<< a->getName() << "[" << a->getSizeInt() - 1 << "]}}"
-						<< ", " << a->getName() << "}";
+
+					if (currComp->getType() == "SHL" || currComp->getType() == "SSHL" ||
+						currComp->getType() == "SHR" || currComp->getType() == "SSHR") {
+
+						if (j == 1) {
+							//nothing here
+						}
+					
+						else {
+							stringstream newName;
+							newName << "{{" << (outputSize - inputSize) << "{" << a->getName() << "[" << a->getSizeInt() - 1 << "]}}"
+								<< ", " << a->getName() << "}";
 
 
-					newPut = new Inoutput(newName.str(), a->getSizeSpec(), a->getType(), a->getSizeInt());
-					currComp->replaceInput(j, newPut);
+							newPut = new Inoutput(newName.str(), a->getSizeSpec(), a->getType(), a->getSizeInt());
+							currComp->replaceInput(j, newPut);
+						}
+					}
+					else {
+						stringstream newName;
+						newName << "{{" << (outputSize - inputSize) << "{" << a->getName() << "[" << a->getSizeInt() - 1 << "]}}"
+							<< ", " << a->getName() << "}";
+
+
+						newPut = new Inoutput(newName.str(), a->getSizeSpec(), a->getType(), a->getSizeInt());
+						currComp->replaceInput(j, newPut);
+					}
 				}
 				else {
 					stringstream newName;
@@ -490,7 +512,7 @@ bool AdjustInputs(Datapath &DP) {
 				}
 				
 			}
-			else if (inputSize > outputSize && (currComp->getName().back() != '1' && j != 2)
+			else if (inputSize > outputSize
 				&& (currComp->getType() != "COMP" && currComp->getType() != "SCOMP")
 				&& (currComp->getType() != "ADD" && currComp->getType() != "SUB")) {
 			
