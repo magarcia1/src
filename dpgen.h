@@ -21,7 +21,6 @@ bool ReadfromFile(Datapath &DP, char* FileName);
 bool AdjustInputs(Datapath &DP);
 bool WritetoFile(Datapath &DP, char* FileName);
 
-
 //------------------------------------------------------------------------------------------------
 
 #endif

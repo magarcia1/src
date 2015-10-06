@@ -462,7 +462,8 @@ bool AdjustInputs(Datapath &DP) {
 			//Check that it is not the select line of the MUX too.
 			//Check that it is not a Comparator output is always smaller.
 			if (inputSize < outputSize && (currComp->getName().back()!='1' && j!=2) 
-				&& (currComp->getType()!="COMP" && currComp->getType() != "SCOMP")) {
+				&& (currComp->getType()!="COMP" && currComp->getType() != "SCOMP")
+				&& (currComp->getType() != "ADD" && currComp->getType() != "SUB")) {
 				if (a->getSigned()) {
 					stringstream newName;
 					newName << "{{" << (outputSize - inputSize) << "{a[" << a->getSizeInt() - 1 << "]}}"
@@ -470,26 +471,27 @@ bool AdjustInputs(Datapath &DP) {
 
 
 					newPut = new Inoutput(newName.str(), a->getSizeSpec(), a->getType(), a->getSizeInt());
-					currComp->replaceInput(i, newPut);
+					currComp->replaceInput(j, newPut);
 				}
 				else {
 					stringstream newName;
 					newName << "{{" << (outputSize - inputSize) << "{0}}" << ", " << a->getName() << "}";
 
 					newPut = new Inoutput(newName.str(), a->getSizeSpec(), a->getType(), a->getSizeInt());
-					currComp->replaceInput(i, newPut);
+					currComp->replaceInput(j, newPut);
 				}
 				
 			}
 			else if (inputSize > outputSize && (currComp->getName().back() != '1' && j != 2)
-				&& (currComp->getType() != "COMP" && currComp->getType() != "SCOMP")) {
+				&& (currComp->getType() != "COMP" && currComp->getType() != "SCOMP")
+				&& (currComp->getType() != "ADD" && currComp->getType() != "SUB")) {
 			
 				stringstream newName;
 				newName << "[" << (inputSize - outputSize) << ":0]" << a->getName();
 
 
 				newPut = new Inoutput(newName.str(), a->getSizeSpec(), a->getType(), a->getSizeInt());
-				currComp->replaceInput(i, newPut);
+				currComp->replaceInput(j, newPut);
 
 			}
 		}
