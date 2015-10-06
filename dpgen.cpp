@@ -203,6 +203,9 @@ bool ReadfromFile(Datapath &DP, char* FileName) {
 				sub->setOutput(c);
 				sub->setSize(c->getSizeInt());
 				DP.insertComponent(sub);
+				
+
+
 			}
 
 			// MULTIPLIER ***********************************************************************
@@ -233,6 +236,8 @@ bool ReadfromFile(Datapath &DP, char* FileName) {
 				mult->setOutput(c);
 				mult->setSize(c->getSizeInt());
 				DP.insertComponent(mult);
+				
+
 			}
 
 			// COMPARATOR ***********************************************************************
@@ -309,15 +314,17 @@ bool ReadfromFile(Datapath &DP, char* FileName) {
 				mux->setOutput(d);
 				mux->setSize(d->getSizeInt());
 				DP.insertComponent(mux);
+				
+
+
 			}
 
 			// REGISTER***************************************************************************
 			else if (words[3] == "") {
-				Component* reg = NULL;
-				Inoutput* a = NULL;
-				Inoutput* b = NULL;
-				Inoutput* clk = new Inoutput("clk", "", "input", 1);
-				Inoutput* rst = new Inoutput("rst", "", "input", 1);
+				Component* reg;
+				Inoutput* a;
+				Inoutput* b;
+
 				stringstream CName;
 
 				CName << "reg" << nameNumber; //guarantees unique name
@@ -332,12 +339,8 @@ bool ReadfromFile(Datapath &DP, char* FileName) {
 				}
 				
 				reg->insertInput(a);
-				reg->insertInput(clk);
-				reg->insertInput(rst);
 				reg->setOutput(b);
 				reg->setSize(b->getSizeInt());
-
-
 				DP.insertComponent(reg);
 				
 			}
@@ -374,6 +377,9 @@ bool ReadfromFile(Datapath &DP, char* FileName) {
 				shr->setOutput(c);
 				shr->setSize(c->getSizeInt());
 				DP.insertComponent(shr);
+				
+
+
 			}
 
 			// LEFT SHIFTER **********************************************************************
@@ -410,11 +416,20 @@ bool ReadfromFile(Datapath &DP, char* FileName) {
 			}
 
 			//ERROR*******************************************************************************
+			/*else if ((words[3] != "+") || (words[3] != "-") || (words[3] != "*") || (words[3] != "<<") ||
+				(words[3] != ">>") || (words[3] != "?") || (words[3] != "") ){
+				cout << "Incorrect operator" << words[3] << " used.";
+				return false;
+			}*/
 			else {
-				cout << "Error on Computation.\n  Program Terminated";
+				cout << "Error on Computation.\n";
 				return false;
 			}
-		}
+}
+		
+
+		
+
 	}
 	input.close();
 	return true;
@@ -496,11 +511,11 @@ bool WritetoFile(Datapath &DP, char* FileName) {
 
 	if (myfile.is_open()) {
 
+		//Print the module declaration *****************************************
 		myfile << "`timescale 1ns / 1ps" << endl << "module circuit(";
 
 		istringstream inputs;
 		istringstream outputs;
-
 
 		for (int i = 0; i < DP.getInpSize(); i++) {
 				myfile << DP.getInputat(i)->getName() << ",";
@@ -511,9 +526,135 @@ bool WritetoFile(Datapath &DP, char* FileName) {
 				myfile << DP.getOutputat(i)->getName() << ");";
 			}
 			else {
-				myfile << DP.getInputat(i)->getName() << ",";
+				myfile << DP.getOutputat(i)->getName() << ",";
 			}
 		}
+		
+		//Print inputs, outputs, and wires*********************************************
+
+		//inputs------
+		int currentsizePrint;
+		int prevsizePrint = DP.getInputat(0)->getSizeInt();
+		int futuresizePrint;
+		myfile << endl << "\tinput " << DP.getInputat(0)->getSizeSpec() << " ";
+
+		for (int i = 0; i < DP.getInpSize(); i++) {
+
+			currentsizePrint = DP.getInputat(i)->getSizeInt();
+
+			if (currentsizePrint == prevsizePrint) {
+				myfile << DP.getInputat(i)->getName();
+
+				if ((i + 1) < DP.getInpSize()) {
+					futuresizePrint = DP.getInputat(i+1)->getSizeInt();
+
+					if (futuresizePrint == currentsizePrint) {
+						myfile << ", ";
+					}
+					else {
+						myfile << ";";
+					}
+
+				}
+				else {
+					myfile << ";";
+				}
+
+			}
+			else {
+				myfile << endl << "\tinput " << DP.getInputat(i)->getSizeSpec() << " "
+					<< DP.getInputat(i)->getName();
+
+				if ((i + 1) != DP.getInpSize()) {
+					myfile << ", ";
+				}
+				else {
+					myfile << ";";
+				}
+			}
+			prevsizePrint = currentsizePrint;
+		}
+
+
+		//outputs------
+		prevsizePrint = DP.getOutputat(0)->getSizeInt();
+		myfile << endl << "\toutput " << DP.getOutputat(0)->getSizeSpec() << " ";
+
+		for (int i = 0; i < DP.getOutSize(); i++) {
+
+			currentsizePrint = DP.getOutputat(i)->getSizeInt();
+
+			if (currentsizePrint == prevsizePrint) {
+				myfile << DP.getOutputat(i)->getName();
+
+				if ((i + 1) < DP.getOutSize()) {
+					futuresizePrint = DP.getOutputat(i + 1)->getSizeInt();
+
+					if (futuresizePrint == currentsizePrint) {
+						myfile << ", ";
+					}
+					else {
+						myfile << ";";
+					}
+
+				}
+
+			}
+			else {
+				myfile << endl << "\toutput " << DP.getOutputat(i)->getSizeSpec() << " "
+					<< DP.getOutputat(i)->getName();
+
+				if ((i + 1) != DP.getOutSize()) {
+					myfile << ", ";
+				}
+				else {
+					myfile << ";";
+				}
+			}
+			prevsizePrint = currentsizePrint;
+		}
+
+		//wire------
+		prevsizePrint = DP.getWireat(0)->getSizeInt();
+		myfile << endl << "\twire " << DP.getWireat(0)->getSizeSpec() << " ";
+
+		for (int i = 0; i < DP.getWireSize(); i++) {
+
+			currentsizePrint = DP.getWireat(i)->getSizeInt();
+
+			if (currentsizePrint == prevsizePrint) {
+				myfile << DP.getWireat(i)->getName();
+
+				if ((i + 1) < DP.getWireSize()) {
+					futuresizePrint = DP.getWireat(i + 1)->getSizeInt();
+
+					if (futuresizePrint == currentsizePrint) {
+						myfile << ", ";
+					}
+					else {
+						myfile << ";";
+					}
+
+				}
+				else if ((i + 1) == DP.getWireSize()) {
+					myfile << ";";
+				}
+			}
+			
+			else {
+				myfile << endl << "\twire " << DP.getWireat(i)->getSizeSpec() << " "
+					<< DP.getWireat(i)->getName();
+
+				if ((i + 1) != DP.getWireSize()) {
+					myfile << ", ";
+				}
+				else {
+					myfile << ";";
+				}
+			}
+			prevsizePrint = currentsizePrint;
+		}
+
 
 
 
