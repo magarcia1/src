@@ -313,10 +313,11 @@ bool ReadfromFile(Datapath &DP, char* FileName) {
 
 			// REGISTER***************************************************************************
 			else if (words[3] == "") {
-				Component* reg;
-				Inoutput* a;
-				Inoutput* b;
-
+				Component* reg = NULL;
+				Inoutput* a = NULL;
+				Inoutput* b = NULL;
+				Inoutput* clk = new Inoutput("clk", "", "input", 1);
+				Inoutput* rst = new Inoutput("rst", "", "input", 1);
 				stringstream CName;
 
 				CName << "reg" << nameNumber; //guarantees unique name
@@ -331,8 +332,12 @@ bool ReadfromFile(Datapath &DP, char* FileName) {
 				}
 				
 				reg->insertInput(a);
+				reg->insertInput(clk);
+				reg->insertInput(rst);
 				reg->setOutput(b);
 				reg->setSize(b->getSizeInt());
+
+
 				DP.insertComponent(reg);
 				
 			}
