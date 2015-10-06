@@ -561,48 +561,49 @@ bool WritetoFile(Datapath &DP, char* FileName) {
 		//Print inputs, outputs, and wires*********************************************
 
 		//inputs------
-		int currentsizePrint;
+		int currentsizePrint = 0;
 		int prevsizePrint = DP.getInputat(0)->getSizeInt();
-		int futuresizePrint;
+		int futuresizePrint = 0;;
 		myfile << endl << "\tinput " << DP.getInputat(0)->getSizeSpec() << " ";
+		for (int testSign = 0; testSign < 2; testSign++){
+			for (int i = 0; i < DP.getInpSize(); i++) {
+				if (testSign == DP.getInputat(i)->getSigned()){
+					
+					currentsizePrint = DP.getInputat(i)->getSizeInt();
+					if (currentsizePrint == prevsizePrint) {
+						myfile << DP.getInputat(i)->getName();
 
-		for (int i = 0; i < DP.getInpSize(); i++) {
+						if ((i + 1) < DP.getInpSize()) {
+							futuresizePrint = DP.getInputat(i + 1)->getSizeInt();
 
-			currentsizePrint = DP.getInputat(i)->getSizeInt();
+							if (futuresizePrint == currentsizePrint) {
+								myfile << ", ";
+							}
+							else {
+								myfile << ";";
+							}
 
-			if (currentsizePrint == prevsizePrint) {
-				myfile << DP.getInputat(i)->getName();
+						}
+						else {
+							myfile << ";";
+						}
 
-				if ((i + 1) < DP.getInpSize()) {
-					futuresizePrint = DP.getInputat(i + 1)->getSizeInt();
-
-					if (futuresizePrint == currentsizePrint) {
-						myfile << ", ";
 					}
 					else {
-						myfile << ";";
+						myfile << endl << "\tinput " << DP.getInputat(i)->getSizeSpec() << " "
+							<< DP.getInputat(i)->getName();
+
+						if ((i + 1) != DP.getInpSize()) {
+							myfile << ", ";
+						}
+						else {
+							myfile << ";";
+						}
 					}
-
-				}
-				else {
-					myfile << ";";
-				}
-
-			}
-			else {
-				myfile << endl << "\tinput " << DP.getInputat(i)->getSizeSpec() << " "
-					<< DP.getInputat(i)->getName();
-
-				if ((i + 1) != DP.getInpSize()) {
-					myfile << ", ";
-				}
-				else {
-					myfile << ";";
+					prevsizePrint = currentsizePrint;
 				}
 			}
-			prevsizePrint = currentsizePrint;
 		}
-
 
 		//outputs------
 		prevsizePrint = DP.getOutputat(0)->getSizeInt();
