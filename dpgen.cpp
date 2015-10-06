@@ -516,16 +516,16 @@ bool WritetoFile(Datapath &DP, char* FileName) {
 		}
 
 		for (i = 0; i < DP.getCompSize(); i++){
-			cout << "	" << DP.getComponent(i)->getType() << " #(" << DP.getComponent(i)->getSize() << ") " << DP.getComponent(i)->getName() << "(";
+			myfile << "	" << DP.getComponent(i)->getType() << " #(" << DP.getComponent(i)->getSize() << ") " << DP.getComponent(i)->getName() << "(";
 			for (j = 0; j < DP.getComponent(i)->getInputSize(); j++){
-				cout << DP.getComponent(i)->getInput(j)->getName() << ", ";
+				myfile << DP.getComponent(i)->getInput(j)->getName() << ", ";
 			}
 			for (j = 0; j < 1; j++){
-				cout << DP.getComponent(i)->getOutput()->getName() << ");";
+				myfile << DP.getComponent(i)->getOutput()->getName() << ");";
 			}
-			cout << "\n";
+			myfile << "\n";
 		}
-		cout << "endmodule\n";
+		myfile << "endmodule\n";
 	}
 	myfile.close();
 	cout << FileName;
