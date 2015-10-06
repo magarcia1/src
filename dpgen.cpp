@@ -203,9 +203,6 @@ bool ReadfromFile(Datapath &DP, char* FileName) {
 				sub->setOutput(c);
 				sub->setSize(c->getSizeInt());
 				DP.insertComponent(sub);
-				
-
-
 			}
 
 			// MULTIPLIER ***********************************************************************
@@ -236,8 +233,6 @@ bool ReadfromFile(Datapath &DP, char* FileName) {
 				mult->setOutput(c);
 				mult->setSize(c->getSizeInt());
 				DP.insertComponent(mult);
-				
-
 			}
 
 			// COMPARATOR ***********************************************************************
@@ -314,9 +309,6 @@ bool ReadfromFile(Datapath &DP, char* FileName) {
 				mux->setOutput(d);
 				mux->setSize(d->getSizeInt());
 				DP.insertComponent(mux);
-				
-
-
 			}
 
 			// REGISTER***************************************************************************
@@ -377,9 +369,6 @@ bool ReadfromFile(Datapath &DP, char* FileName) {
 				shr->setOutput(c);
 				shr->setSize(c->getSizeInt());
 				DP.insertComponent(shr);
-				
-
-
 			}
 
 			// LEFT SHIFTER **********************************************************************
@@ -416,20 +405,11 @@ bool ReadfromFile(Datapath &DP, char* FileName) {
 			}
 
 			//ERROR*******************************************************************************
-			/*else if ((words[3] != "+") || (words[3] != "-") || (words[3] != "*") || (words[3] != "<<") ||
-				(words[3] != ">>") || (words[3] != "?") || (words[3] != "") ){
-				cout << "Incorrect operator" << words[3] << " used.";
-				return false;
-			}*/
 			else {
-				cout << "Error on Computation.\n";
+				cout << "Error on Computation.\n  Program Terminated";
 				return false;
 			}
-}
-		
-
-		
-
+		}
 	}
 
 	return true;
