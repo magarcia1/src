@@ -321,9 +321,11 @@ bool ReadfromFile(Datapath &DP, char* FileName) {
 
 			// REGISTER***************************************************************************
 			else if (words[3] == "") {
-				Component* reg;
-				Inoutput* a;
-				Inoutput* b;
+				Component* reg = NULL;
+				Inoutput* a = NULL;
+				Inoutput* b = NULL;
+				Inoutput* clk = new Inoutput("clk", "", "input", 1);
+				Inoutput* rst = new Inoutput("rst", "", "input", 1);
 
 				stringstream CName;
 
@@ -338,11 +340,9 @@ bool ReadfromFile(Datapath &DP, char* FileName) {
 					return false;
 				}
 				
-<<<<<<< HEAD
-=======
+
 				reg->insertInput(clk);
 				reg->insertInput(rst);
->>>>>>> origin/master
 				reg->insertInput(a);
 				reg->setOutput(b);
 				reg->setSize(b->getSizeInt());
@@ -511,7 +511,7 @@ bool AdjustInputs(Datapath &DP) {
 
 bool WritetoFile(Datapath &DP, char* FileName) {
 	Component* currComponent = NULL;
-	int i = 0, j =0;
+	int i = 0, j = 0;
 	ofstream myfile(FileName);
 
 	if (myfile.is_open()) {
@@ -523,7 +523,7 @@ bool WritetoFile(Datapath &DP, char* FileName) {
 		istringstream outputs;
 
 		for (int i = 0; i < DP.getInpSize(); i++) {
-				myfile << DP.getInputat(i)->getName() << ",";
+			myfile << DP.getInputat(i)->getName() << ",";
 		}
 
 		for (int i = 0; i < DP.getOutSize(); i++) {
@@ -534,7 +534,7 @@ bool WritetoFile(Datapath &DP, char* FileName) {
 				myfile << DP.getOutputat(i)->getName() << ",";
 			}
 		}
-		
+
 		//Print inputs, outputs, and wires*********************************************
 
 		//inputs------
@@ -551,7 +551,7 @@ bool WritetoFile(Datapath &DP, char* FileName) {
 				myfile << DP.getInputat(i)->getName();
 
 				if ((i + 1) < DP.getInpSize()) {
-					futuresizePrint = DP.getInputat(i+1)->getSizeInt();
+					futuresizePrint = DP.getInputat(i + 1)->getSizeInt();
 
 					if (futuresizePrint == currentsizePrint) {
 						myfile << ", ";
@@ -580,7 +580,6 @@ bool WritetoFile(Datapath &DP, char* FileName) {
 			prevsizePrint = currentsizePrint;
 		}
 
-<<<<<<< HEAD
 
 		//outputs------
 		prevsizePrint = DP.getOutputat(0)->getSizeInt();
@@ -646,7 +645,7 @@ bool WritetoFile(Datapath &DP, char* FileName) {
 					myfile << ";";
 				}
 			}
-			
+
 			else {
 				myfile << endl << "\twire " << DP.getWireat(i)->getSizeSpec() << " "
 					<< DP.getWireat(i)->getName();
@@ -661,11 +660,8 @@ bool WritetoFile(Datapath &DP, char* FileName) {
 			prevsizePrint = currentsizePrint;
 		}
 
-
-
-
-=======
-		for (i = 0; i < DP.getCompSize(); i++){
+		myfile << "\n\n";
+		for (int i = 0; i < DP.getCompSize(); i++){
 			myfile << "	" << DP.getComponent(i)->getType() << " #(" << DP.getComponent(i)->getSize() << ") " << DP.getComponent(i)->getName() << "(";
 			for (j = 0; j < DP.getComponent(i)->getInputSize(); j++){
 				myfile << DP.getComponent(i)->getInput(j)->getName() << ", ";
@@ -676,9 +672,8 @@ bool WritetoFile(Datapath &DP, char* FileName) {
 			myfile << "\n";
 		}
 		myfile << "endmodule\n";
->>>>>>> origin/master
+		myfile.close();
+		cout << FileName;
+		return true;
 	}
-	myfile.close();
-	cout << FileName;
-	return true;
 }
