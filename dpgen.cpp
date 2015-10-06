@@ -331,9 +331,9 @@ bool ReadfromFile(Datapath &DP, char* FileName) {
 					return false;
 				}
 				
-				reg->insertInput(a);
 				reg->insertInput(clk);
 				reg->insertInput(rst);
+				reg->insertInput(a);
 				reg->setOutput(b);
 				reg->setSize(b->getSizeInt());
 
@@ -491,7 +491,7 @@ bool AdjustInputs(Datapath &DP) {
 
 bool WritetoFile(Datapath &DP, char* FileName) {
 	Component* currComponent = NULL;
-
+	int i = 0, j =0;
 	ofstream myfile(FileName);
 
 	if (myfile.is_open()) {
@@ -515,6 +515,16 @@ bool WritetoFile(Datapath &DP, char* FileName) {
 			}
 		}
 
+		for (i = 0; i < DP.getCompSize(); i++){
+			cout << DP.getComponent(i)->getType() << " #(" << DP.getComponent(i)->getSize() << ") " << DP.getComponent(i)->getName() << "(";
+			for (j = 0; j < DP.getComponent(i)->getInputSize(); j++){
+				cout << DP.getComponent(i)->getInput(j)->getName() << ", ";
+			}
+			for (j = 0; j < 1; j++){
+				cout << DP.getComponent(i)->getOutput()->getName() << ");";
+			}
+			cout << "\n";
+		}
 
 
 	}
