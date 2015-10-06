@@ -128,9 +128,12 @@ bool ReadfromFile(Datapath &DP, char* FileName) {
 				}
 				else {
 					//remove the comma if there is one in "input a, b,".
-					if (words[j].back() == ','){
-						words[j].pop_back();
+					if (words[j].at(words[j].length()-1) == ',') {
+						words[j] = words[j].erase(words[j].size() - 1);
 					}
+					/*if (words[j].back() == ','){
+						words[j].pop_back();
+					} */
 
 					//Create class object and insert to DP*****
 					iow = new Inoutput(words[j], words[1], words[0], size);
@@ -467,7 +470,7 @@ bool AdjustInputs(Datapath &DP) {
 			
 			//Check that it is not the select line of the MUX too.
 			//Check that it is not a Comparator output is always smaller.
-			if (inputSize < outputSize && (currComp->getType().back()!='1' && j!=2) 
+			if (inputSize < outputSize && (currComp->getType().at(currComp->getType().length()-1) !='1' && j!=2)
 				&& (currComp->getType()!="COMP" && currComp->getType() != "SCOMP")
 				&& (currComp->getType() != "ADD" && currComp->getType() != "SUB")
 				&& (currComp->getType() != "REG" && (j!=0 || j!=1))
@@ -748,7 +751,8 @@ bool WritetoFile(Datapath &DP, char* FileName) {
 		}
 		myfile << "endmodule\n";
 		myfile.close();
-		cout << FileName;
+		cout << "Output generation successful to: "<< FileName << endl;
 		return true;
 	}
+	return true;
 }
