@@ -338,6 +338,11 @@ bool ReadfromFile(Datapath &DP, char* FileName) {
 					return false;
 				}
 				
+<<<<<<< HEAD
+=======
+				reg->insertInput(clk);
+				reg->insertInput(rst);
+>>>>>>> origin/master
 				reg->insertInput(a);
 				reg->setOutput(b);
 				reg->setSize(b->getSizeInt());
@@ -506,7 +511,7 @@ bool AdjustInputs(Datapath &DP) {
 
 bool WritetoFile(Datapath &DP, char* FileName) {
 	Component* currComponent = NULL;
-
+	int i = 0, j =0;
 	ofstream myfile(FileName);
 
 	if (myfile.is_open()) {
@@ -575,6 +580,7 @@ bool WritetoFile(Datapath &DP, char* FileName) {
 			prevsizePrint = currentsizePrint;
 		}
 
+<<<<<<< HEAD
 
 		//outputs------
 		prevsizePrint = DP.getOutputat(0)->getSizeInt();
@@ -658,9 +664,21 @@ bool WritetoFile(Datapath &DP, char* FileName) {
 
 
 
+=======
+		for (i = 0; i < DP.getCompSize(); i++){
+			myfile << "	" << DP.getComponent(i)->getType() << " #(" << DP.getComponent(i)->getSize() << ") " << DP.getComponent(i)->getName() << "(";
+			for (j = 0; j < DP.getComponent(i)->getInputSize(); j++){
+				myfile << DP.getComponent(i)->getInput(j)->getName() << ", ";
+			}
+			for (j = 0; j < 1; j++){
+				myfile << DP.getComponent(i)->getOutput()->getName() << ");";
+			}
+			myfile << "\n";
+		}
+		myfile << "endmodule\n";
+>>>>>>> origin/master
 	}
 	myfile.close();
 	cout << FileName;
 	return true;
 }
-
