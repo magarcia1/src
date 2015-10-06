@@ -1,6 +1,6 @@
 //------------------------------------------------------------------------------------------------
 //
-// Author: Rubi Ballesteros and 
+// Author: Rubi Ballesteros and Miguel Garcia
 // Date Created: 13 November 2013
 //
 // Description: General code for a binary search tree that does not handle the case of duplicate key insertions.
@@ -277,9 +277,6 @@ bool ReadfromFile(Datapath &DP, char* FileName) {
 
 				comp->setSize(temp);
 				DP.insertComponent(comp);
-				
-
-
 			}
 
 			// 2X1MULTIPLEXER *******************************************************************
@@ -323,7 +320,7 @@ bool ReadfromFile(Datapath &DP, char* FileName) {
 			}
 
 			// REGISTER***************************************************************************
-			if (words[3] == "") {
+			else if (words[3] == "") {
 				Component* reg;
 				Inoutput* a;
 				Inoutput* b;
@@ -424,7 +421,12 @@ bool ReadfromFile(Datapath &DP, char* FileName) {
 				cout << "Incorrect operator" << words[3] << " used.";
 				return false;
 			}*/
-		}
+			else {
+				cout << "Error on Computation.\n";
+				return false;
+			}
+}
+		
 
 		
 
@@ -436,9 +438,9 @@ bool ReadfromFile(Datapath &DP, char* FileName) {
 
 bool AdjustInputs(Datapath &DP) {
 	Inoutput* newPut;
-	Inoutput* a;
-	Inoutput* b;
-	Inoutput* c;
+	Inoutput* a = NULL;
+	Inoutput* b = NULL;
+	Inoutput* c = NULL;
 
 	Component* currComp;
 
@@ -503,7 +505,7 @@ bool AdjustInputs(Datapath &DP) {
 }
 
 bool WritetoFile(Datapath &DP, char* FileName) {
-	Component* currComponent;
+	Component* currComponent = NULL;
 
 	ofstream myfile(FileName);
 
