@@ -110,3 +110,12 @@ Component* Datapath::getComponent(int i) {
 	return this->components.at(i);
 }
 
+Inoutput* Datapath::getInputat(int i) {
+	return this->inputs.at(i);
+}
+Inoutput* Datapath::getOutputat(int i) {
+	return this->outputs.at(i);
+}
+Inoutput* Datapath::getWireat(int i) {
+	return this->wires.at(i);
+}

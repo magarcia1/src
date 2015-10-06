@@ -37,6 +37,9 @@ public:
 	void insertPut(Inoutput* iow);
 	void insertComponent(Component* dpcomp);
 	Inoutput* getInput(string name);
+	Inoutput* getInputat(int i);
+	Inoutput* getOutputat(int i);
+	Inoutput* getWireat(int i);
 	Inoutput* getOutputWire(string name);
 	Component* getComponent(int i);
 	int getCompSize();

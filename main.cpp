@@ -29,7 +29,7 @@ int main(int argc, char *argv[])
 		cout << "Could not finish reading the file due to the errors listed above." << endl;
 		return -2;
 	}
-
+	
 	if (!AdjustInputs(DPComponents)) {
 		cout << "Could not finish reading the file due to the errors listed above." << endl;
 		return -3;
