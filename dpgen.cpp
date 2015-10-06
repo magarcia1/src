@@ -434,7 +434,7 @@ bool ReadfromFile(Datapath &DP, char* FileName) {
 
 }
 
-bool AdjustComponents(Datapath &DP) {
+bool AdjustInputs(Datapath &DP) {
 	Inoutput* newPut;
 	Inoutput* a;
 	Inoutput* b;
@@ -445,18 +445,24 @@ bool AdjustComponents(Datapath &DP) {
 	int outputSize;
 	int inputSize;
 
-	
+	if (DP.getCompSize() == 0) {
+		cout << "You entered an empty file." << endl;
+		return false;
+	}
 
 	for (int i=0; i < DP.getCompSize(); i++) {
+		
 		currComp = DP.getComponent(i);
-		for (int j=0; currComp->getInputSize(); j++) {
-			a = currComp->getInput(i);
+		for (int j=0; j < currComp->getInputSize(); j++) {
+			a = currComp->getInput(j);
 			b = currComp->getOutput();
 			inputSize = a->getSizeInt();
 			outputSize = b->getSizeInt();
 			
 			//Check that it is not the select line of the MUX too.
-			if (inputSize < outputSize && (currComp->getName().back()!='1' && j!=2) ) {
+			//Check that it is not a Comparator output is always smaller.
+			if (inputSize < outputSize && (currComp->getName().back()!='1' && j!=2) 
+				&& (currComp->getType()!="COMP" && currComp->getType() != "SCOMP")) {
 				if (a->getSigned()) {
 					stringstream newName;
 					newName << "{{" << (outputSize - inputSize) << "{a[" << a->getSizeInt() - 1 << "]}}"
@@ -475,7 +481,8 @@ bool AdjustComponents(Datapath &DP) {
 				}
 				
 			}
-			else if (inputSize > outputSize && (currComp->getName().back() != '1' && j != 2)) {
+			else if (inputSize > outputSize && (currComp->getName().back() != '1' && j != 2)
+				&& (currComp->getType() != "COMP" && currComp->getType() != "SCOMP")) {
 			
 				stringstream newName;
 				newName << "[" << (inputSize - outputSize) << ":0]" << a->getName();
@@ -488,6 +495,7 @@ bool AdjustComponents(Datapath &DP) {
 		}
 	
 	}
+
 
 	return true;
 }

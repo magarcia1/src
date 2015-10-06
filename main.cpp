@@ -30,9 +30,14 @@ int main(int argc, char *argv[])
 		return -2;
 	}
 
+	if (!AdjustInputs(DPComponents)) {
+		cout << "Could not finish reading the file due to the errors listed above." << endl;
+		return -3;
+	}
+
 	if (!WritetoFile(DPComponents, argv[2])) {
 		cout << "Could not finish writing to the file due to the errors listed above." << endl;
-		return -3;
+		return -4;
 	}
 
 	return 0;

@@ -61,7 +61,7 @@ Inoutput* Datapath::getInput(string name) {
 		}
 	}
 
-	cout << "The input " << name << " specified does not matched the inputs declared.\n Program terminated.";
+	cout << "The input/wire " << name << " specified does not match the inputs declared.\n Program terminated.\n";
 	return NULL;
 }
 
@@ -87,7 +87,7 @@ Inoutput* Datapath::getOutputWire(string name) {
 			return current;
 		}
 	}
-	cout << "The wire/output " << name << " specified does not matched the inputs declared.\n Program terminated.";
+	cout << "The wire/output " << name << " specified does not match the inputs declared.\n Program terminated.\n";
 	return NULL;
 
 }
