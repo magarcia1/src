@@ -416,7 +416,7 @@ bool ReadfromFile(Datapath &DP, char* FileName) {
 			}
 		}
 	}
-
+	input.close();
 	return true;
 
 }
@@ -496,17 +496,29 @@ bool WritetoFile(Datapath &DP, char* FileName) {
 
 	if (myfile.is_open()) {
 
-		/*myfile << "`timescale 1ns / 1ps" << endl << "module circuit(";
+		myfile << "`timescale 1ns / 1ps" << endl << "module circuit(";
 
 		istringstream inputs;
 		istringstream outputs;
 
 
-		for (int i = 0; i < DP.)*/
+		for (int i = 0; i < DP.getInpSize(); i++) {
+				myfile << DP.getInputat(i)->getName() << ",";
+		}
+
+		for (int i = 0; i < DP.getOutSize(); i++) {
+			if (i + 1 == DP.getOutSize()) {
+				myfile << DP.getOutputat(i)->getName() << ");";
+			}
+			else {
+				myfile << DP.getInputat(i)->getName() << ",";
+			}
+		}
 
 
 
 	}
+	myfile.close();
 	cout << FileName;
 	return true;
 }
