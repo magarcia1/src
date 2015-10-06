@@ -445,7 +445,6 @@ bool AdjustInputs(Datapath &DP) {
 	Inoutput* newPut;
 	Inoutput* a = NULL;
 	Inoutput* b = NULL;
-	Inoutput* c = NULL;
 
 	Component* currComp;
 
@@ -533,8 +532,7 @@ bool AdjustInputs(Datapath &DP) {
 }
 
 bool WritetoFile(Datapath &DP, char* FileName) {
-	Component* currComponent = NULL;
-	int i = 0, j = 0;
+	int j = 0;
 	ofstream myfile(FileName);
 
 	if (myfile.is_open()) {

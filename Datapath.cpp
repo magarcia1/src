@@ -40,21 +40,21 @@ void Datapath::insertComponent(Component* dpcomp) {
 
 Inoutput* Datapath::getInput(string name) {
 	Inoutput* current;
-	for (int i = 0; i < inputs.size(); i++) {
+	for (int unsigned i = 0; i < inputs.size(); i++) {
 		current = inputs.at(i);
 		if (name == current->getName()) {
 			return current;
 		}
 	}
 
-	for (int i = 0; i < wires.size(); i++) {
+	for (int unsigned i = 0; i < wires.size(); i++) {
 		current = wires.at(i);
 		if (name == current->getName()) {
 			return current;
 		}
 	}
 
-	for (int i = 0; i < registers.size(); i++) {
+	for (int unsigned i = 0; i < registers.size(); i++) {
 		current = registers.at(i);
 		if (name == current->getName()) {
 			return current;
@@ -67,21 +67,21 @@ Inoutput* Datapath::getInput(string name) {
 
 Inoutput* Datapath::getOutputWire(string name) {
 	Inoutput* current;
-	for (int i = 0; i < wires.size(); i++) {
+	for (int unsigned i = 0; i < wires.size(); i++) {
 		current = wires.at(i);
 		if (name == current->getName()) {
 			return current;
 		}
 	}
 
-	for (int i = 0; i < outputs.size(); i++) {
+	for (int unsigned i = 0; i < outputs.size(); i++) {
 		current = outputs.at(i);
 		if (name == current->getName()) {
 			return current;
 		}
 	}
 
-	for (int i = 0; i < registers.size(); i++) {
+	for (int unsigned i = 0; i < registers.size(); i++) {
 		current = registers.at(i);
 		if (name == current->getName()) {
 			return current;
