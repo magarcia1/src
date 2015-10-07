@@ -33,7 +33,12 @@ Component::Component(string atype, string aname) {
 }
 
 Component::~Component() {
-
+	unsigned int i = 0;
+	//for (i = 0; i < inputs.size(); ++i){
+	//	delete(inputs[i]);
+	//}
+	//delete output;
+	//inputs.clear();
 }
 
 

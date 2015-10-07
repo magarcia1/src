@@ -30,8 +30,13 @@ Inoutput::Inoutput(string nameString, string sizeSpecString, string type, int si
 	this->signedNum = true;
 
 }
-Inoutput::~Inoutput() {
+Inoutput::~Inoutput(void) {
 	//done in datapath.h/.c
+	this->name = "empty";
+	this->sizeSpec = "";
+	this->size = 0;
+	this->type = "";
+	this->signedNum = true;
 }
 
 void Inoutput::setSign(bool sign) {
