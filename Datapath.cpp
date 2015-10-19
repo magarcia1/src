@@ -18,11 +18,14 @@ Datapath::Datapath() {
 Datapath::~Datapath() {
 	unsigned int i = 0;
 
-	for (i = 0; i < inputs.size(); ++i){
-		delete(inputs[i]);
-	}
-	for (i = 0; i < outputs.size(); ++i){
-		delete(outputs[i]);
+	//for (i = 0; i < this->inputs.size(); ++i){
+	//	delete(inputs[i]);
+	//}
+	//for (i = 0; i < outputs.size(); ++i){
+	//	delete(outputs[i]);
+	//}
+	for (i = 0; i < components.size(); ++i){
+		delete(components[i]);
 	}
 	for (i = 0; i < wires.size(); ++i){
 		delete(wires[i]);
@@ -30,14 +33,12 @@ Datapath::~Datapath() {
 	for (i = 0; i < registers.size(); ++i){
 		delete(registers[i]);
 	}
-	for (i = 0; i < components.size(); ++i){
-		delete(components[i]);
-	}
+
 	inputs.clear();
 	outputs.clear();
 	wires.clear();
 	registers.clear();
-	components.clear();
+	//components.clear();
 }
 
 

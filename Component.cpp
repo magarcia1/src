@@ -28,17 +28,30 @@ Component::Component() {
 Component::Component(string atype, string aname) {
 	this->type = atype;
 	this->name = aname;
+	if (this->type[this->type.length()] != '\0') {
+		type[type.length()] = '\0';
+	}
+	if (name[name.length()] != '\0') {
+		name[name.length()] = '\0';
+	}
+
 	this->output = NULL;
 	this->sizeoOutput = 0;
 }
 
 Component::~Component() {
+
 	unsigned int i = 0;
-	//for (i = 0; i < inputs.size(); ++i){
-	//	delete(inputs[i]);
-	//}
-	//delete output;
-	//inputs.clear();
+	type = "";
+	name = "";
+	sizeoOutput = 0;
+	for (i = 0; i < this->inputs.size(); ++i){
+		deleteinputs[i]);
+	}
+	inputs.clear();
+	delete output;
+	output = NULL;
+
 }
 
 

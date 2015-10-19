@@ -39,6 +39,5 @@ int main(int argc, char *argv[])
 		cout << "Could not finish writing to the file due to the errors listed above." << endl;
 		return -4;
 	}
-
 	return 0;
 }

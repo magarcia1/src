@@ -451,15 +451,16 @@ bool AdjustInputs(Datapath &DP) {
 
 	Component* currComp;
 
-	int outputSize;
-	int inputSize;
+	int outputSize = 0;
+	int inputSize = 0;
+	unsigned int i = 0;
 
 	if (DP.getCompSize() == 0) {
 		cout << "You entered an empty file." << endl;
 		return false;
 	}
 
-	for (int i=0; i < DP.getCompSize(); i++) {
+	for (i=0; i < DP.getCompSize(); i++) {
 		
 		currComp = DP.getComponent(i);
 		for (int j=0; j < currComp->getInputSize(); j++) {
@@ -754,5 +755,7 @@ bool WritetoFile(Datapath &DP, char* FileName) {
 		cout << "Output generation successful to: "<< FileName << endl;
 		return true;
 	}
+	//(&DP)->~Datapath();
 	return true;
+		
 }
